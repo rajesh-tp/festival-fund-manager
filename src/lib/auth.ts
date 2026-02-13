@@ -7,7 +7,7 @@ const SESSION_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 const COOKIE_NAME = "session";
 
 type SessionPayload = {
-  role: "admin";
+  username: string;
   exp: number;
 };
 
@@ -43,9 +43,9 @@ function verify(token: string): SessionPayload | null {
   }
 }
 
-export async function createSession(): Promise<void> {
+export async function createSession(username: string): Promise<void> {
   const payload: SessionPayload = {
-    role: "admin",
+    username,
     exp: Date.now() + SESSION_DURATION_MS,
   };
   const token = sign(payload);
@@ -70,4 +70,12 @@ export async function verifySession(): Promise<boolean> {
   const token = cookieStore.get(COOKIE_NAME)?.value;
   if (!token) return false;
   return verify(token) !== null;
+}
+
+export async function getSessionUser(): Promise<string | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE_NAME)?.value;
+  if (!token) return null;
+  const payload = verify(token);
+  return payload?.username ?? null;
 }

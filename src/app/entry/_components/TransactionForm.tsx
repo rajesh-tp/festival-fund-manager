@@ -6,7 +6,7 @@ import {
   updateTransaction,
   type ActionState,
 } from "@/lib/actions";
-import { getTodayString } from "@/lib/utils";
+import { getTodayString, isoToddmmyyyy } from "@/lib/utils";
 import { toast } from "sonner";
 import { type Transaction } from "@/db/schema";
 import Link from "next/link";
@@ -16,9 +16,10 @@ const initialState: ActionState = { status: "idle", message: "" };
 
 type TransactionFormProps = {
   editData?: Transaction;
+  eventId: number;
 };
 
-export function TransactionForm({ editData }: TransactionFormProps) {
+export function TransactionForm({ editData, eventId }: TransactionFormProps) {
   const isEditing = !!editData;
   const action = isEditing ? updateTransaction : addTransaction;
 
@@ -30,7 +31,7 @@ export function TransactionForm({ editData }: TransactionFormProps) {
     if (state.status === "success") {
       toast.success(state.message);
       if (isEditing) {
-        router.push("/entry");
+        router.push(`/entry?event=${eventId}`);
       } else {
         formRef.current?.reset();
       }
@@ -46,6 +47,7 @@ export function TransactionForm({ editData }: TransactionFormProps) {
       className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm"
     >
       {editData && <input type="hidden" name="id" value={editData.id} />}
+      <input type="hidden" name="eventId" value={eventId} />
 
       <div className="space-y-5">
         {/* Date */}
@@ -57,12 +59,13 @@ export function TransactionForm({ editData }: TransactionFormProps) {
             Date <span className="text-red-500">*</span>
           </label>
           <input
-            type="date"
+            type="text"
             id="date"
             name="date"
+            placeholder="dd/mm/yyyy"
             key={`date-${editData?.id ?? "new"}`}
-            defaultValue={editData?.date ?? getTodayString()}
-            className="w-full rounded-lg border border-stone-300 px-4 py-2.5 text-stone-900 transition-colors focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+            defaultValue={editData ? isoToddmmyyyy(editData.date) : getTodayString()}
+            className="w-full rounded-lg border border-stone-300 px-4 py-2.5 text-stone-900 placeholder:text-stone-400 transition-colors focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
           />
           {state.errors?.date && (
             <p className="mt-1 text-sm text-red-600">{state.errors.date[0]}</p>
@@ -218,7 +221,7 @@ export function TransactionForm({ editData }: TransactionFormProps) {
           </button>
           {isEditing && (
             <Link
-              href="/entry"
+              href={`/entry?event=${eventId}`}
               className="flex items-center rounded-lg border border-stone-300 px-6 py-3 text-sm font-semibold text-stone-600 transition-colors hover:bg-stone-50"
             >
               Cancel

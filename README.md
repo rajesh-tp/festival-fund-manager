@@ -1,6 +1,6 @@
 # Festival Fund Manager
 
-A web application for managing temple/church festival funds — tracking income (donations, contributions) and expenditures (supplies, services) with real-time summaries and date-wise reports.
+A web application for managing temple festival funds — track income (donations, contributions) and expenditures (supplies, services) across multiple events with real-time summaries, date-wise reports, and PDF export.
 
 ## Tech Stack
 
@@ -10,17 +10,90 @@ A web application for managing temple/church festival funds — tracking income 
 - **ORM**: Drizzle ORM
 - **Validation**: Zod v4
 - **Styling**: Tailwind CSS v4
+- **PDF**: jsPDF + jspdf-autotable
 - **Notifications**: Sonner
-- **Deployment**: Fly.io (Docker)
+- **Deployment**: Docker / Fly.io
 
 ## Features
 
+- Create and manage multiple temple events (e.g., "Ayyappa Festival 2026")
+- Record income and expenditure transactions scoped to each event
 - Dashboard with income / expenditure / net total summary cards
-- Transaction entry form for income and expenditure
-- Date-wise transaction reports with type filtering
-- Edit and delete existing transactions
-- Single admin authentication (cookie-based sessions)
+- Date-wise transaction reports with type filtering and sorting (date/amount)
+- PDF preview and download per event
+- Multi-user authentication (cookie-based sessions with SHA-256 hashing)
+- Superadmin controls: delete all transactions per event, reset user passwords, delete events
 - Fully responsive design (mobile + desktop)
+
+## Default Users
+
+| Username     | Password     | Role        |
+|-------------|-------------|-------------|
+| admin       | *********   | Admin       |
+| superadmin  | *********   | Superadmin  |
+
+## Running with Docker Desktop
+
+### 1. Build the Docker image
+
+```bash
+docker build -t festival-fund-manager .
+```
+
+### 2. Run the container
+
+```bash
+docker run -d --name festival-fund -p 3000:3000 festival-fund-manager
+```
+
+The app will be available at **http://localhost:3000**
+
+### 3. Run with persistent data
+
+To keep your database across container restarts, mount a volume:
+
+```bash
+docker run -d --name festival-fund -p 3000:3000 -v festival-data:/data festival-fund-manager
+```
+
+### 4. Stop the container
+
+```bash
+docker stop festival-fund
+```
+
+### 5. Start a stopped container
+
+```bash
+docker start festival-fund
+```
+
+### 6. View logs
+
+```bash
+docker logs festival-fund
+```
+
+Follow logs in real-time:
+
+```bash
+docker logs -f festival-fund
+```
+
+### 7. Rebuild and redeploy after code changes
+
+```bash
+docker stop festival-fund && docker rm festival-fund
+docker build -t festival-fund-manager .
+docker run -d --name festival-fund -p 3000:3000 -v festival-data:/data festival-fund-manager
+```
+
+### 8. Remove everything (container + data)
+
+```bash
+docker stop festival-fund && docker rm festival-fund
+docker volume rm festival-data
+```
 
 ## Local Development
 
@@ -44,18 +117,16 @@ A web application for managing temple/church festival funds — tracking income 
    npm install
    ```
 
-3. Create a `.env.local` file:
-
-   ```env
-   ADMIN_USER=admin
-   ADMIN_PASSWORD=your-secure-password
-   SESSION_SECRET=your-random-secret-key-at-least-32-chars
-   ```
-
-4. Run database migrations:
+3. Run database migrations:
 
    ```bash
    npm run db:migrate
+   ```
+
+4. Seed default users:
+
+   ```bash
+   node seed-users.mjs
    ```
 
 5. Start the development server:
@@ -66,16 +137,10 @@ A web application for managing temple/church festival funds — tracking income 
 
 6. Open [http://localhost:3000](http://localhost:3000)
 
-### Default Credentials
-
-If no `.env.local` is set, the default login is `admin` / `admin`.
-
 ## Environment Variables
 
 | Variable         | Description                           | Required | Default              |
 |-----------------|---------------------------------------|----------|----------------------|
-| `ADMIN_USER`    | Admin login username                  | No       | `admin`              |
-| `ADMIN_PASSWORD`| Admin login password                  | No       | `admin`              |
 | `SESSION_SECRET`| Secret key for signing session tokens | No       | dev fallback         |
 | `DATABASE_URL`  | Path to SQLite database file          | No       | `./data/festival.db` |
 
@@ -105,13 +170,13 @@ If no `.env.local` is set, the default login is `admin` / `admin`.
 2. Create a persistent volume for the database:
 
    ```bash
-   fly volumes create festival_data --region sin --size 1
+   fly volumes create festival_data --region bom --size 1
    ```
 
 3. Set environment secrets:
 
    ```bash
-   fly secrets set ADMIN_USER=admin ADMIN_PASSWORD=your-secure-password SESSION_SECRET=$(openssl rand -base64 32)
+   fly secrets set SESSION_SECRET=$(openssl rand -base64 32)
    ```
 
 4. Deploy:
@@ -137,35 +202,44 @@ fly deploy
 ```
 src/
   app/
-    layout.tsx               # Root layout with Navbar and Toaster
-    page.tsx                 # Home page with summary dashboard
+    layout.tsx               # Root layout with Navbar, EventSelector, and Toaster
+    page.tsx                 # Home page with summary dashboard (scoped to event)
     login/
       page.tsx               # Login page
       _components/
         LoginForm.tsx        # Login form (client component)
-    entry/
-      page.tsx               # Data entry page (protected)
+    events/
+      page.tsx               # Event management page
       _components/
-        TransactionForm.tsx  # Add/edit form (client component)
+        EventForm.tsx        # Create event form (client component)
+        EventList.tsx        # Event list with select/delete (client component)
+    entry/
+      page.tsx               # Data entry page (scoped to event)
+      _components/
+        TransactionForm.tsx  # Add/edit form with hidden eventId (client component)
         RecentEntries.tsx    # Recent entries list (server component)
         DeleteButton.tsx     # Delete with confirmation (client component)
+        SuperadminPanel.tsx  # Delete all transactions, reset passwords (client component)
     reports/
-      page.tsx               # Reports page with date grouping
+      page.tsx               # Reports page with date grouping (scoped to event)
       _components/
-        ReportFilters.tsx
-        DateGroup.tsx
-        SummaryBar.tsx
+        ReportFilters.tsx    # Type filter + sort dropdown
+        DateGroup.tsx        # Date-grouped transaction view
+        AmountSortedList.tsx # Amount-sorted flat list view
+        SummaryBar.tsx       # Income/expenditure/net summary bar
+        DownloadPdfButton.tsx # PDF preview and download
   components/
-    Navbar.tsx               # Navigation bar with auth state
+    Navbar.tsx               # Navigation bar with event selector
+    EventSelector.tsx        # Event dropdown (client component)
     SummaryCard.tsx          # Reusable summary card
   db/
-    schema.ts                # Drizzle schema definition
+    schema.ts                # Drizzle schema (events, transactions, users)
   lib/
-    actions.ts               # Server actions (CRUD + auth)
+    actions.ts               # Server actions (event CRUD, transaction CRUD, auth)
     auth.ts                  # Session management helpers
     db.ts                    # Database connection
-    queries.ts               # Read queries
-    utils.ts                 # Formatting utilities
-    validators.ts            # Zod schemas
-  proxy.ts                  # Route protection for /entry
+    queries.ts               # Read queries (all scoped by eventId)
+    utils.ts                 # Date formatting and currency utilities
+    validators.ts            # Zod schemas (event, transaction)
+  proxy.ts                   # Route protection middleware
 ```

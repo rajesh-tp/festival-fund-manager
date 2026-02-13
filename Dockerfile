@@ -19,7 +19,7 @@ RUN npm run build
 FROM node:22-alpine AS runner
 WORKDIR /app
 
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat dos2unix
 
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
@@ -43,9 +43,10 @@ COPY --from=builder /app/src/db ./src/db
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
-# Copy startup script
+# Copy startup and seed scripts
 COPY --from=builder /app/start.sh ./start.sh
-RUN chmod +x start.sh
+COPY --from=builder /app/seed-users.mjs ./seed-users.mjs
+RUN dos2unix start.sh && chmod +x start.sh
 
 # Create data directory for local fallback
 RUN mkdir -p /data && chown nextjs:nodejs /data

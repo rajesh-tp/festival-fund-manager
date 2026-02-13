@@ -1,14 +1,27 @@
 import { db } from "@/lib/db";
-import { transactions, type Transaction } from "@/db/schema";
-import { desc, eq, sum } from "drizzle-orm";
+import { events, transactions, type Transaction } from "@/db/schema";
+import { and, asc, desc, eq, sum } from "drizzle-orm";
 
-export async function getSummary() {
+// --- Event Queries ---
+
+export async function getAllEvents() {
+  return db.select().from(events).orderBy(desc(events.createdAt)).all();
+}
+
+export async function getEventById(id: number) {
+  return db.select().from(events).where(eq(events.id, id)).get();
+}
+
+// --- Transaction Queries (scoped to event) ---
+
+export async function getSummary(eventId: number) {
   const result = db
     .select({
       type: transactions.type,
       total: sum(transactions.amount).mapWith(Number),
     })
     .from(transactions)
+    .where(eq(transactions.eventId, eventId))
     .groupBy(transactions.type)
     .all();
 
@@ -26,10 +39,11 @@ export async function getTransactionById(id: number) {
   return db.select().from(transactions).where(eq(transactions.id, id)).get();
 }
 
-export async function getRecentEntries(limit = 10) {
+export async function getRecentEntries(eventId: number, limit = 10) {
   return db
     .select()
     .from(transactions)
+    .where(eq(transactions.eventId, eventId))
     .orderBy(desc(transactions.createdAt))
     .limit(limit)
     .all();
@@ -41,17 +55,35 @@ export type DateGroupData = {
   expenditureTotal: number;
 };
 
+export type SortField = "date" | "amount";
+export type SortOrder = "asc" | "desc";
+
 export async function getTransactionsGroupedByDate(
-  typeFilter?: "income" | "expenditure"
+  eventId: number,
+  typeFilter?: "income" | "expenditure",
+  sortBy: SortField = "date",
+  sortOrder: SortOrder = "desc"
 ) {
-  let query = db
+  const orderFn = sortOrder === "asc" ? asc : desc;
+
+  const whereClause = typeFilter
+    ? and(eq(transactions.eventId, eventId), eq(transactions.type, typeFilter))
+    : eq(transactions.eventId, eventId);
+
+  const rows = db
     .select()
     .from(transactions)
-    .orderBy(desc(transactions.date), desc(transactions.createdAt));
+    .where(whereClause)
+    .orderBy(orderFn(transactions.date), desc(transactions.createdAt))
+    .all();
 
-  const rows = typeFilter
-    ? query.where(eq(transactions.type, typeFilter)).all()
-    : query.all();
+  if (sortBy === "amount") {
+    rows.sort((a, b) =>
+      sortOrder === "asc" ? a.amount - b.amount : b.amount - a.amount
+    );
+
+    return { sorted: rows, grouped: null };
+  }
 
   const grouped = new Map<string, DateGroupData>();
 
@@ -68,5 +100,5 @@ export async function getTransactionsGroupedByDate(
     }
   }
 
-  return grouped;
+  return { sorted: null, grouped };
 }

@@ -8,6 +8,14 @@ export const transactionSchema = z.object({
     error: "Please select Income or Expenditure",
   }),
   description: z.string().max(500).optional().default(""),
+  eventId: z.coerce.number().int().positive("Event is required"),
 });
 
 export type TransactionFormData = z.infer<typeof transactionSchema>;
+
+export const eventSchema = z.object({
+  name: z.string().min(1, "Event name is required").max(200, "Name is too long"),
+  description: z.string().max(500).optional().default(""),
+});
+
+export type EventFormData = z.infer<typeof eventSchema>;

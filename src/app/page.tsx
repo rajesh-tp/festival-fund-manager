@@ -1,26 +1,76 @@
 import Link from "next/link";
-import { getSummary } from "@/lib/queries";
+import { getSummary, getEventById } from "@/lib/queries";
 import { SummaryCard } from "@/components/SummaryCard";
 
-export default async function HomePage() {
-  const summary = await getSummary();
+type HomePageProps = {
+  searchParams: Promise<{ event?: string }>;
+};
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const { event: eventParam } = await searchParams;
+  const eventId = eventParam ? Number(eventParam) : null;
+
+  if (!eventId || isNaN(eventId)) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+        <svg
+          className="mx-auto h-16 w-16 text-amber-300"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+        <h1 className="mt-6 text-2xl font-bold text-stone-800">
+          Welcome to Festival Fund Manager
+        </h1>
+        <p className="mt-2 text-stone-500">
+          Please select or create an event to get started.
+        </p>
+        <Link
+          href="/events"
+          className="mt-6 inline-block rounded-lg bg-amber-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
+        >
+          Go to Events
+        </Link>
+      </div>
+    );
+  }
+
+  const event = await getEventById(eventId);
+
+  if (!event) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+        <p className="text-stone-500">Event not found.</p>
+        <Link
+          href="/events"
+          className="mt-4 inline-block rounded-lg bg-amber-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
+        >
+          Go to Events
+        </Link>
+      </div>
+    );
+  }
+
+  const summary = await getSummary(eventId);
 
   return (
     <div>
       {/* Banner Section */}
-      <section className="relative bg-gradient-to-br from-amber-900 via-amber-800 to-amber-700 px-4 py-16 text-white md:py-24">
-        <div className="absolute inset-0 bg-[url('/images/temple-banner.jpg')] bg-cover bg-center opacity-20" />
+      <section className="relative overflow-hidden px-4 py-16 text-white md:py-24">
+        <div className="absolute inset-0 bg-[url('/images/temple-banner.jpg')] bg-cover bg-center" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         <div className="relative mx-auto max-w-6xl text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-amber-700/50 px-4 py-1.5 text-sm text-amber-200">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-sm text-amber-200 backdrop-blur-sm">
             <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
             </svg>
-            Temple Festival Fund
+            {event.name}
           </div>
-          <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
+          <h1 className="text-4xl font-bold tracking-tight drop-shadow-lg md:text-5xl">
             Festival Fund Manager
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-amber-100">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-white/90 drop-shadow-md">
             Track your temple festival income and expenditures with ease.
             Manage donations and expenses all in one place.
           </p>
@@ -28,7 +78,7 @@ export default async function HomePage() {
       </section>
 
       {/* Summary Cards */}
-      <section className="mx-auto -mt-8 max-w-6xl px-4">
+      <section className="mx-auto mt-8 max-w-6xl px-4">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <SummaryCard
             title="Total Income"
@@ -55,7 +105,7 @@ export default async function HomePage() {
         </h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Link
-            href="/entry"
+            href={`/entry?event=${eventId}`}
             className="group flex items-center justify-between rounded-xl border border-stone-200 bg-white p-6 shadow-sm transition-all hover:border-amber-300 hover:shadow-md"
           >
             <div className="flex items-center gap-4">
@@ -75,7 +125,7 @@ export default async function HomePage() {
           </Link>
 
           <Link
-            href="/reports"
+            href={`/reports?event=${eventId}`}
             className="group flex items-center justify-between rounded-xl border border-stone-200 bg-white p-6 shadow-sm transition-all hover:border-amber-300 hover:shadow-md"
           >
             <div className="flex items-center gap-4">

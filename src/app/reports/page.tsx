@@ -1,24 +1,93 @@
-import { getTransactionsGroupedByDate, getSummary } from "@/lib/queries";
+import Link from "next/link";
+import { getTransactionsGroupedByDate, getSummary, getEventById, type SortField, type SortOrder } from "@/lib/queries";
 import { SummaryBar } from "./_components/SummaryBar";
 import { ReportFilters } from "./_components/ReportFilters";
 import { DateGroup } from "./_components/DateGroup";
+import { AmountSortedList } from "./_components/AmountSortedList";
+import { DownloadPdfButton } from "./_components/DownloadPdfButton";
 
 type ReportsPageProps = {
-  searchParams: Promise<{ type?: string }>;
+  searchParams: Promise<{ type?: string; sortBy?: string; sortOrder?: string; event?: string }>;
 };
 
 export default async function ReportsPage({ searchParams }: ReportsPageProps) {
-  const { type } = await searchParams;
+  const params = await searchParams;
+  const eventId = params.event ? Number(params.event) : null;
+
+  if (!eventId || isNaN(eventId)) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+        <p className="text-stone-500">
+          Please select an event to view reports.
+        </p>
+        <Link
+          href="/events"
+          className="mt-4 inline-block rounded-lg bg-amber-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
+        >
+          Go to Events
+        </Link>
+      </div>
+    );
+  }
+
+  const event = await getEventById(eventId);
+
+  if (!event) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+        <p className="text-stone-500">Event not found.</p>
+        <Link
+          href="/events"
+          className="mt-4 inline-block rounded-lg bg-amber-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
+        >
+          Go to Events
+        </Link>
+      </div>
+    );
+  }
+
   const typeFilter =
-    type === "income" || type === "expenditure" ? type : undefined;
-  const grouped = await getTransactionsGroupedByDate(typeFilter);
-  const summary = await getSummary();
+    params.type === "income" || params.type === "expenditure" ? params.type : undefined;
+  const sortBy: SortField = params.sortBy === "amount" ? "amount" : "date";
+  const sortOrder: SortOrder = params.sortOrder === "asc" ? "asc" : "desc";
+
+  const result = await getTransactionsGroupedByDate(eventId, typeFilter, sortBy, sortOrder);
+  const summary = await getSummary(eventId);
+
+  const isEmpty = sortBy === "amount"
+    ? !result.sorted || result.sorted.length === 0
+    : !result.grouped || result.grouped.size === 0;
+
+  // Collect all entries for PDF export
+  const allEntries = sortBy === "amount" && result.sorted
+    ? result.sorted
+    : result.grouped
+      ? Array.from(result.grouped.values()).flatMap((g) => g.entries)
+      : [];
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="mb-8 text-2xl font-bold text-stone-800">
-        Transaction Reports
-      </h1>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-stone-800">
+            Transaction Reports
+          </h1>
+          <p className="mt-1 text-sm text-stone-500">{event.name}</p>
+        </div>
+        {!isEmpty && (
+          <DownloadPdfButton
+            entries={allEntries.map((e) => ({
+              date: e.date,
+              name: e.name,
+              type: e.type,
+              amount: e.amount,
+              description: e.description ?? "",
+            }))}
+            summary={summary}
+            eventName={event.name}
+          />
+        )}
+      </div>
 
       <SummaryBar
         totalIncome={summary.totalIncome}
@@ -28,7 +97,7 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
 
       <ReportFilters />
 
-      {grouped.size === 0 ? (
+      {isEmpty ? (
         <div className="mt-8 rounded-xl border border-stone-200 bg-white p-12 text-center shadow-sm">
           <svg
             className="mx-auto h-12 w-12 text-stone-300"
@@ -51,10 +120,14 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
           </p>
         </div>
       ) : (
-        <div className="mt-6 space-y-6">
-          {Array.from(grouped.entries()).map(([date, data]) => (
-            <DateGroup key={date} date={date} data={data} />
-          ))}
+        <div id="report-content" className="mt-6 space-y-6">
+          {sortBy === "amount" && result.sorted ? (
+            <AmountSortedList entries={result.sorted} />
+          ) : (
+            result.grouped && Array.from(result.grouped.entries()).map(([date, data]) => (
+              <DateGroup key={date} date={date} data={data} />
+            ))
+          )}
         </div>
       )}
     </div>

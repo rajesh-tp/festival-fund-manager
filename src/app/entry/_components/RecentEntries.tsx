@@ -5,9 +5,10 @@ import { DeleteButton } from "./DeleteButton";
 
 type RecentEntriesProps = {
   entries: Transaction[];
+  eventId: number;
 };
 
-export function RecentEntries({ entries }: RecentEntriesProps) {
+export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
   if (entries.length === 0) {
     return (
       <div className="mt-8 rounded-xl border border-stone-200 bg-white p-8 text-center shadow-sm">
@@ -79,7 +80,7 @@ export function RecentEntries({ entries }: RecentEntriesProps) {
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-center gap-3">
                     <Link
-                      href={`/entry?edit=${entry.id}`}
+                      href={`/entry?event=${eventId}&edit=${entry.id}`}
                       className="text-amber-700 transition-colors hover:text-amber-900"
                       title="Edit transaction"
                     >
@@ -149,7 +150,7 @@ export function RecentEntries({ entries }: RecentEntriesProps) {
             </div>
             <div className="mt-3 flex items-center gap-4 border-t border-stone-100 pt-3">
               <Link
-                href={`/entry?edit=${entry.id}`}
+                href={`/entry?event=${eventId}&edit=${entry.id}`}
                 className="flex items-center gap-1.5 text-xs font-medium text-amber-700 transition-colors hover:text-amber-900"
               >
                 <svg
