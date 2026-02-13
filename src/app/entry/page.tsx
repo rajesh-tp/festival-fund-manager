@@ -7,6 +7,8 @@ import { RecentEntries } from "./_components/RecentEntries";
 import { SuperadminPanel } from "./_components/SuperadminPanel";
 import { type Transaction } from "@/db/schema";
 
+export const dynamic = "force-dynamic";
+
 type EntryPageProps = {
   searchParams: Promise<{ edit?: string; event?: string }>;
 };

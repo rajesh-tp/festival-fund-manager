@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getSummary, getEventById } from "@/lib/queries";
 import { SummaryCard } from "@/components/SummaryCard";
 
+export const dynamic = "force-dynamic";
+
 type HomePageProps = {
   searchParams: Promise<{ event?: string }>;
 };
@@ -65,10 +67,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
             </svg>
-            {event.name}
+            Festival Fund Manager
           </div>
           <h1 className="text-4xl font-bold tracking-tight drop-shadow-lg md:text-5xl">
-            Festival Fund Manager
+            {event.name}
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg text-white/90 drop-shadow-md">
             Track your temple festival income and expenditures with ease.

@@ -66,17 +66,25 @@ export function EventList({ events, isSuperadmin }: EventListProps) {
             </Link>
 
             {isSuperadmin && (
-              <button
-                onClick={() => handleDelete(event.id)}
-                onBlur={() => setConfirmDeleteId(null)}
-                className={`rounded-lg px-3 py-2 text-sm font-medium text-white transition-colors ${
-                  confirmDeleteId === event.id
-                    ? "bg-red-700 hover:bg-red-800"
-                    : "bg-red-600 hover:bg-red-700"
-                }`}
-              >
-                {confirmDeleteId === event.id ? "Confirm" : "Delete"}
-              </button>
+              <>
+                <Link
+                  href={`/events?edit=${event.id}`}
+                  className="rounded-lg bg-stone-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-stone-700"
+                >
+                  Edit
+                </Link>
+                <button
+                  onClick={() => handleDelete(event.id)}
+                  onBlur={() => setConfirmDeleteId(null)}
+                  className={`rounded-lg px-3 py-2 text-sm font-medium text-white transition-colors ${
+                    confirmDeleteId === event.id
+                      ? "bg-red-700 hover:bg-red-800"
+                      : "bg-red-600 hover:bg-red-700"
+                  }`}
+                >
+                  {confirmDeleteId === event.id ? "Confirm" : "Delete"}
+                </button>
+              </>
             )}
           </div>
         </div>

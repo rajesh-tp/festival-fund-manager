@@ -2,6 +2,8 @@ import { verifySession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { LoginForm } from "./_components/LoginForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function LoginPage() {
   const isAuthenticated = await verifySession();
   if (isAuthenticated) {

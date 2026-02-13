@@ -23,6 +23,10 @@ export function getTodayString(): string {
   return `${dd}/${mm}/${yyyy}`;
 }
 
+export function getTodayISO(): string {
+  return new Date().toISOString().split("T")[0];
+}
+
 export function isoToddmmyyyy(iso: string): string {
   const [yyyy, mm, dd] = iso.split("-");
   return `${dd}/${mm}/${yyyy}`;

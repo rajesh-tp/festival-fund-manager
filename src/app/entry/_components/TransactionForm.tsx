@@ -6,7 +6,7 @@ import {
   updateTransaction,
   type ActionState,
 } from "@/lib/actions";
-import { getTodayString, isoToddmmyyyy } from "@/lib/utils";
+import { getTodayISO } from "@/lib/utils";
 import { toast } from "sonner";
 import { type Transaction } from "@/db/schema";
 import Link from "next/link";
@@ -59,13 +59,12 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
             Date <span className="text-red-500">*</span>
           </label>
           <input
-            type="text"
+            type="date"
             id="date"
             name="date"
-            placeholder="dd/mm/yyyy"
             key={`date-${editData?.id ?? "new"}`}
-            defaultValue={editData ? isoToddmmyyyy(editData.date) : getTodayString()}
-            className="w-full rounded-lg border border-stone-300 px-4 py-2.5 text-stone-900 placeholder:text-stone-400 transition-colors focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+            defaultValue={editData?.date ?? getTodayISO()}
+            className="w-full rounded-lg border border-stone-300 px-4 py-2.5 text-stone-900 transition-colors focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
           />
           {state.errors?.date && (
             <p className="mt-1 text-sm text-red-600">{state.errors.date[0]}</p>

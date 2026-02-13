@@ -6,6 +6,8 @@ import { DateGroup } from "./_components/DateGroup";
 import { AmountSortedList } from "./_components/AmountSortedList";
 import { DownloadPdfButton } from "./_components/DownloadPdfButton";
 
+export const dynamic = "force-dynamic";
+
 type ReportsPageProps = {
   searchParams: Promise<{ type?: string; sortBy?: string; sortOrder?: string; event?: string }>;
 };

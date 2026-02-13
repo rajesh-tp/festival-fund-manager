@@ -4,7 +4,6 @@ import { db } from "@/lib/db";
 import { events, transactions, users } from "@/db/schema";
 import { transactionSchema, eventSchema } from "@/lib/validators";
 import { revalidatePath } from "next/cache";
-import { ddmmyyyyToISO } from "@/lib/utils";
 import { createSession, deleteSession, verifySession, getSessionUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
@@ -103,6 +102,61 @@ export async function createEvent(
   }
 }
 
+export async function updateEvent(
+  prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const denied = await requireSuperadmin();
+  if (denied) return denied;
+
+  const id = Number(formData.get("id"));
+  if (!id || isNaN(id)) {
+    return {
+      status: "error",
+      message: "Invalid event ID.",
+      timestamp: Date.now(),
+    };
+  }
+
+  const raw = {
+    name: formData.get("name"),
+    description: formData.get("description"),
+  };
+
+  const parsed = eventSchema.safeParse(raw);
+
+  if (!parsed.success) {
+    return {
+      status: "error",
+      message: "Validation failed. Please check the form.",
+      errors: parseFormErrors(parsed.error),
+      timestamp: Date.now(),
+    };
+  }
+
+  try {
+    db.update(events)
+      .set(parsed.data)
+      .where(eq(events.id, id))
+      .run();
+
+    revalidatePath("/events");
+    revalidatePath("/");
+
+    return {
+      status: "success",
+      message: `Event updated: ${parsed.data.name}`,
+      timestamp: Date.now(),
+    };
+  } catch {
+    return {
+      status: "error",
+      message: "Failed to update event. Please try again.",
+      timestamp: Date.now(),
+    };
+  }
+}
+
 export async function deleteEvent(id: number): Promise<ActionState> {
   const denied = await requireSuperadmin();
   if (denied) return denied;
@@ -137,7 +191,7 @@ export async function addTransaction(
   formData: FormData
 ): Promise<ActionState> {
   const raw = {
-    date: ddmmyyyyToISO(formData.get("date") as string),
+    date: formData.get("date"),
     name: formData.get("name"),
     amount: formData.get("amount"),
     type: formData.get("type"),
@@ -200,7 +254,7 @@ export async function updateTransaction(
   }
 
   const raw = {
-    date: ddmmyyyyToISO(formData.get("date") as string),
+    date: formData.get("date"),
     name: formData.get("name"),
     amount: formData.get("amount"),
     type: formData.get("type"),
