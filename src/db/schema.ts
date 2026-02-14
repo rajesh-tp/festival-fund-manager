@@ -22,6 +22,9 @@ export const transactions = sqliteTable(
     name: text("name").notNull(),
     amount: real("amount").notNull(),
     type: text("type", { enum: ["income", "expenditure"] }).notNull(),
+    paymentMode: text("payment_mode", { enum: ["cash", "bank"] })
+      .notNull()
+      .default("cash"),
     description: text("description").default(""),
     eventId: integer("event_id").references(() => events.id),
     createdAt: integer("created_at", { mode: "timestamp" })

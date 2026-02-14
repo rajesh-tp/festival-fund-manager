@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getTransactionsGroupedByDate, getSummary, getEventById, type SortField, type SortOrder } from "@/lib/queries";
+import { getTransactionsGroupedByDate, getSummary, getEventById, type SortField, type SortOrder, type PaymentModeFilter } from "@/lib/queries";
 import { SummaryBar } from "./_components/SummaryBar";
 import { ReportFilters } from "./_components/ReportFilters";
 import { DateGroup } from "./_components/DateGroup";
@@ -9,7 +9,7 @@ import { DownloadPdfButton } from "./_components/DownloadPdfButton";
 export const dynamic = "force-dynamic";
 
 type ReportsPageProps = {
-  searchParams: Promise<{ type?: string; sortBy?: string; sortOrder?: string; event?: string }>;
+  searchParams: Promise<{ type?: string; sortBy?: string; sortOrder?: string; event?: string; paymentMode?: string }>;
 };
 
 export default async function ReportsPage({ searchParams }: ReportsPageProps) {
@@ -52,9 +52,11 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
     params.type === "income" || params.type === "expenditure" ? params.type : undefined;
   const sortBy: SortField = params.sortBy === "amount" ? "amount" : "date";
   const sortOrder: SortOrder = params.sortOrder === "asc" ? "asc" : "desc";
+  const paymentModeFilter: PaymentModeFilter | undefined =
+    params.paymentMode === "cash" || params.paymentMode === "bank" ? params.paymentMode : undefined;
 
-  const result = await getTransactionsGroupedByDate(eventId, typeFilter, sortBy, sortOrder);
-  const summary = await getSummary(eventId);
+  const result = await getTransactionsGroupedByDate(eventId, typeFilter, sortBy, sortOrder, paymentModeFilter);
+  const summary = await getSummary(eventId, paymentModeFilter);
 
   const isEmpty = sortBy === "amount"
     ? !result.sorted || result.sorted.length === 0
@@ -82,6 +84,7 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
               date: e.date,
               name: e.name,
               type: e.type,
+              paymentMode: e.paymentMode,
               amount: e.amount,
               description: e.description ?? "",
             }))}

@@ -23,6 +23,9 @@ export function AmountSortedList({ entries }: AmountSortedListProps) {
                 Type
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-stone-400 uppercase">
+                Mode
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-stone-400 uppercase">
                 Description
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium tracking-wider text-stone-400 uppercase">
@@ -48,6 +51,17 @@ export function AmountSortedList({ entries }: AmountSortedListProps) {
                     }`}
                   >
                     {entry.type === "income" ? "Income" : "Expenditure"}
+                  </span>
+                </td>
+                <td className="px-6 py-3">
+                  <span
+                    className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      entry.paymentMode === "bank"
+                        ? "bg-blue-100 text-blue-700"
+                        : "bg-amber-100 text-amber-700"
+                    }`}
+                  >
+                    {entry.paymentMode === "bank" ? "by bank" : "by cash"}
                   </span>
                 </td>
                 <td className="px-6 py-3 text-sm text-stone-500">
@@ -87,15 +101,26 @@ export function AmountSortedList({ entries }: AmountSortedListProps) {
                 {entry.type === "income" ? "+" : "-"}
                 {formatCurrency(entry.amount)}
               </p>
-              <span
-                className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                  entry.type === "income"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
-                }`}
-              >
-                {entry.type === "income" ? "Income" : "Expenditure"}
-              </span>
+              <div className="mt-1 flex gap-1.5">
+                <span
+                  className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+                    entry.type === "income"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                  }`}
+                >
+                  {entry.type === "income" ? "Income" : "Expenditure"}
+                </span>
+                <span
+                  className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+                    entry.paymentMode === "bank"
+                      ? "bg-blue-100 text-blue-700"
+                      : "bg-amber-100 text-amber-700"
+                  }`}
+                >
+                  {entry.paymentMode === "bank" ? "bank" : "cash"}
+                </span>
+              </div>
             </div>
           </div>
         ))}

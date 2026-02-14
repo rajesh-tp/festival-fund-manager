@@ -1,0 +1,1 @@
+ALTER TABLE `transactions` ADD `payment_mode` text DEFAULT 'cash' NOT NULL;

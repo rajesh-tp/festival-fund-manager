@@ -7,6 +7,9 @@ export const transactionSchema = z.object({
   type: z.enum(["income", "expenditure"], {
     error: "Please select Income or Expenditure",
   }),
+  paymentMode: z.enum(["cash", "bank"], {
+    error: "Please select Cash or Bank",
+  }).default("cash"),
   description: z.string().max(500).optional().default(""),
   eventId: z.coerce.number().int().positive("Event is required"),
 });

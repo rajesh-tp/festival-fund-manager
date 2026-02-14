@@ -7,6 +7,7 @@ type PdfEntry = {
   date: string;
   name: string;
   type: "income" | "expenditure";
+  paymentMode: "cash" | "bank";
   amount: number;
   description: string;
 };
@@ -59,13 +60,14 @@ function buildPdf(entries: PdfEntry[], summary: DownloadPdfButtonProps["summary"
     formatDate(e.date),
     e.name,
     e.type === "income" ? "Income" : "Expenditure",
+    e.paymentMode === "bank" ? "by bank" : "by cash",
     e.description || "-",
     `${e.type === "income" ? "+" : "-"}${formatCurrency(e.amount)}`,
   ]);
 
   autoTable(doc, {
     startY: 45,
-    head: [["Date", "Name", "Type", "Description", "Amount"]],
+    head: [["Date", "Name", "Type", "Mode", "Description", "Amount"]],
     body: tableData,
     styles: { fontSize: 9, cellPadding: 3 },
     headStyles: {
@@ -74,7 +76,7 @@ function buildPdf(entries: PdfEntry[], summary: DownloadPdfButtonProps["summary"
       fontStyle: "bold",
     },
     columnStyles: {
-      4: { halign: "right" },
+      5: { halign: "right" },
     },
     alternateRowStyles: { fillColor: [250, 250, 248] },
   });

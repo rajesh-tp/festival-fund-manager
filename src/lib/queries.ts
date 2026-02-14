@@ -14,14 +14,21 @@ export async function getEventById(id: number) {
 
 // --- Transaction Queries (scoped to event) ---
 
-export async function getSummary(eventId: number) {
+export type PaymentModeFilter = "cash" | "bank";
+
+export async function getSummary(eventId: number, paymentModeFilter?: PaymentModeFilter) {
+  const conditions = [eq(transactions.eventId, eventId)];
+  if (paymentModeFilter) {
+    conditions.push(eq(transactions.paymentMode, paymentModeFilter));
+  }
+
   const result = db
     .select({
       type: transactions.type,
       total: sum(transactions.amount).mapWith(Number),
     })
     .from(transactions)
-    .where(eq(transactions.eventId, eventId))
+    .where(and(...conditions))
     .groupBy(transactions.type)
     .all();
 
@@ -62,13 +69,19 @@ export async function getTransactionsGroupedByDate(
   eventId: number,
   typeFilter?: "income" | "expenditure",
   sortBy: SortField = "date",
-  sortOrder: SortOrder = "desc"
+  sortOrder: SortOrder = "desc",
+  paymentModeFilter?: PaymentModeFilter
 ) {
   const orderFn = sortOrder === "asc" ? asc : desc;
 
-  const whereClause = typeFilter
-    ? and(eq(transactions.eventId, eventId), eq(transactions.type, typeFilter))
-    : eq(transactions.eventId, eventId);
+  const conditions = [eq(transactions.eventId, eventId)];
+  if (typeFilter) {
+    conditions.push(eq(transactions.type, typeFilter));
+  }
+  if (paymentModeFilter) {
+    conditions.push(eq(transactions.paymentMode, paymentModeFilter));
+  }
+  const whereClause = and(...conditions);
 
   const rows = db
     .select()

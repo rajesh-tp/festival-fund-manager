@@ -157,6 +157,44 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
           )}
         </div>
 
+        {/* Payment Mode */}
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-stone-700">
+            Payment Mode <span className="text-red-500">*</span>
+          </label>
+          <div className="flex gap-3">
+            <label className="flex-1">
+              <input
+                type="radio"
+                name="paymentMode"
+                value="cash"
+                key={`mode-cash-${editData?.id ?? "new"}`}
+                defaultChecked={editData?.paymentMode !== "bank"}
+                className="peer hidden"
+              />
+              <div className="cursor-pointer rounded-lg border-2 border-stone-200 px-4 py-2.5 text-center text-sm font-medium text-stone-600 transition-all peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-700">
+                Cash
+              </div>
+            </label>
+            <label className="flex-1">
+              <input
+                type="radio"
+                name="paymentMode"
+                value="bank"
+                key={`mode-bank-${editData?.id ?? "new"}`}
+                defaultChecked={editData?.paymentMode === "bank"}
+                className="peer hidden"
+              />
+              <div className="cursor-pointer rounded-lg border-2 border-stone-200 px-4 py-2.5 text-center text-sm font-medium text-stone-600 transition-all peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700">
+                Bank (GPay, etc.)
+              </div>
+            </label>
+          </div>
+          {state.errors?.paymentMode && (
+            <p className="mt-1 text-sm text-red-600">{state.errors.paymentMode[0]}</p>
+          )}
+        </div>
+
         {/* Description */}
         <div>
           <label

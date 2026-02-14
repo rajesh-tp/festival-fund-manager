@@ -8,6 +8,12 @@ const typeFilters = [
   { value: "expenditure", label: "Expenditure" },
 ];
 
+const paymentModeOptions = [
+  { value: "all", label: "All Modes" },
+  { value: "cash", label: "Cash" },
+  { value: "bank", label: "Bank" },
+];
+
 const sortOptions = [
   { value: "date-desc", label: "Date \u2193" },
   { value: "date-asc", label: "Date \u2191" },
@@ -19,6 +25,7 @@ export function ReportFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentFilter = searchParams.get("type") ?? "all";
+  const currentPaymentMode = searchParams.get("paymentMode") ?? "all";
   const currentSortBy = searchParams.get("sortBy") ?? "date";
   const currentSortOrder = searchParams.get("sortOrder") ?? "desc";
   const currentSort = `${currentSortBy}-${currentSortOrder}`;
@@ -38,6 +45,10 @@ export function ReportFilters() {
 
   function handleFilterChange(value: string) {
     updateParams({ type: value === "all" ? null : value });
+  }
+
+  function handlePaymentModeChange(value: string) {
+    updateParams({ paymentMode: value === "all" ? null : value });
   }
 
   function handleSortChange(value: string) {
@@ -67,7 +78,18 @@ export function ReportFilters() {
         ))}
       </div>
 
-      <div className="ml-auto">
+      <div className="ml-auto flex items-center gap-3">
+        <select
+          value={currentPaymentMode}
+          onChange={(e) => handlePaymentModeChange(e.target.value)}
+          className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-700 shadow-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+        >
+          {paymentModeOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
         <select
           value={currentSort}
           onChange={(e) => handleSortChange(e.target.value)}

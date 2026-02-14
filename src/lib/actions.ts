@@ -195,6 +195,7 @@ export async function addTransaction(
     name: formData.get("name"),
     amount: formData.get("amount"),
     type: formData.get("type"),
+    paymentMode: formData.get("paymentMode"),
     description: formData.get("description"),
     eventId: formData.get("eventId"),
   };
@@ -258,6 +259,7 @@ export async function updateTransaction(
     name: formData.get("name"),
     amount: formData.get("amount"),
     type: formData.get("type"),
+    paymentMode: formData.get("paymentMode"),
     description: formData.get("description"),
     eventId: formData.get("eventId"),
   };
