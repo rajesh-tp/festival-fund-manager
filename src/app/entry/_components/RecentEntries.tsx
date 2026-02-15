@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { type Transaction } from "@/db/schema";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import Link from "next/link";
@@ -9,7 +13,29 @@ type RecentEntriesProps = {
 };
 
 export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
-  if (entries.length === 0) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentSearch = searchParams.get("search") ?? "";
+  const [searchInput, setSearchInput] = useState(currentSearch);
+
+  function handleSearch() {
+    const params = new URLSearchParams(searchParams.toString());
+    if (searchInput.trim()) {
+      params.set("search", searchInput.trim());
+    } else {
+      params.delete("search");
+    }
+    router.push(`/entry?${params.toString()}`);
+  }
+
+  function handleClear() {
+    setSearchInput("");
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("search");
+    router.push(`/entry?${params.toString()}`);
+  }
+
+  if (entries.length === 0 && !currentSearch) {
     return (
       <div className="mt-8 rounded-xl border border-stone-200 bg-white p-8 text-center shadow-sm">
         <p className="text-stone-500">
@@ -21,10 +47,47 @@ export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
 
   return (
     <div className="mt-8">
-      <h2 className="mb-4 text-lg font-semibold text-stone-800">
-        Recent Entries
-      </h2>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold text-stone-800">
+          {currentSearch ? "Search Results" : "Recent Entries"}
+        </h2>
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            placeholder="Search by name..."
+            className="w-48 rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-700 shadow-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+          />
+          <button
+            onClick={handleSearch}
+            className="rounded-lg bg-amber-700 px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-amber-800"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+          {currentSearch && (
+            <button
+              onClick={handleClear}
+              className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-600 shadow-sm transition-colors hover:bg-stone-50"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+      </div>
 
+      {entries.length === 0 && currentSearch && (
+        <div className="rounded-xl border border-stone-200 bg-white p-8 text-center shadow-sm">
+          <p className="text-stone-500">
+            No entries found matching &ldquo;{currentSearch}&rdquo;.
+          </p>
+        </div>
+      )}
+
+      {entries.length > 0 && <>
       {/* Desktop Table */}
       <div className="hidden overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm md:block">
         <table className="w-full">
@@ -198,6 +261,7 @@ export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
           </div>
         ))}
       </div>
+      </>}
     </div>
   );
 }

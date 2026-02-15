@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getRecentEntries, getTransactionById } from "@/lib/queries";
+import { getRecentEntries, getTransactionById, searchTransactionsByName } from "@/lib/queries";
 import { getAllUsers } from "@/lib/actions";
 import { getSessionUser } from "@/lib/auth";
 import { TransactionForm } from "./_components/TransactionForm";
@@ -10,11 +10,11 @@ import { type Transaction } from "@/db/schema";
 export const dynamic = "force-dynamic";
 
 type EntryPageProps = {
-  searchParams: Promise<{ edit?: string; event?: string }>;
+  searchParams: Promise<{ edit?: string; event?: string; search?: string }>;
 };
 
 export default async function EntryPage({ searchParams }: EntryPageProps) {
-  const { edit, event: eventParam } = await searchParams;
+  const { edit, event: eventParam, search } = await searchParams;
   const eventId = eventParam ? Number(eventParam) : null;
 
   if (!eventId || isNaN(eventId)) {
@@ -33,7 +33,9 @@ export default async function EntryPage({ searchParams }: EntryPageProps) {
     );
   }
 
-  const recentEntries = await getRecentEntries(eventId, 10);
+  const recentEntries = search
+    ? await searchTransactionsByName(eventId, search)
+    : await getRecentEntries(eventId, 10);
   const currentUser = await getSessionUser();
   const isSuperadmin = currentUser === "superadmin";
 

@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { events, transactions, type Transaction } from "@/db/schema";
-import { and, asc, desc, eq, sum } from "drizzle-orm";
+import { and, asc, desc, eq, like, sum } from "drizzle-orm";
 
 // --- Event Queries ---
 
@@ -53,6 +53,15 @@ export async function getRecentEntries(eventId: number, limit = 10) {
     .where(eq(transactions.eventId, eventId))
     .orderBy(desc(transactions.createdAt))
     .limit(limit)
+    .all();
+}
+
+export async function searchTransactionsByName(eventId: number, query: string) {
+  return db
+    .select()
+    .from(transactions)
+    .where(and(eq(transactions.eventId, eventId), like(transactions.name, `${query}%`)))
+    .orderBy(desc(transactions.createdAt))
     .all();
 }
 
