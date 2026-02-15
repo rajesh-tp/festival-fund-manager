@@ -1,8 +1,5 @@
 "use client";
 
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-
 type PdfEntry = {
   date: string;
   name: string;
@@ -38,62 +35,81 @@ function formatCurrency(amount: number): string {
   return `Rs. ${formatted}`;
 }
 
-function buildPdf(entries: PdfEntry[], summary: DownloadPdfButtonProps["summary"], eventName: string) {
-  const doc = new jsPDF();
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
-  doc.setFontSize(18);
-  doc.setTextColor(40, 40, 40);
-  doc.text(`${eventName} - Transaction Report`, 14, 20);
+function buildReportHtml(
+  entries: PdfEntry[],
+  summary: DownloadPdfButtonProps["summary"],
+  eventName: string,
+  autoPrint: boolean,
+): string {
+  const rows = entries
+    .map((e, i) => {
+      const bg = i % 2 === 1 ? "background-color:#fafaf8;" : "";
+      const sign = e.type === "income" ? "+" : "-";
+      return `<tr style="${bg}">
+      <td style="padding:8px 12px;border-bottom:1px solid #e7e5e4;">${formatDate(e.date)}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e7e5e4;">${escapeHtml(e.name)}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e7e5e4;">${e.type === "income" ? "Income" : "Expenditure"}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e7e5e4;">${e.paymentMode === "bank" ? "by bank" : "by cash"}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e7e5e4;">${escapeHtml(e.description || "-")}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e7e5e4;text-align:right;">${sign}${formatCurrency(e.amount)}</td>
+    </tr>`;
+    })
+    .join("");
 
-  doc.setFontSize(10);
-  doc.setTextColor(120, 120, 120);
-  doc.text(`Generated: ${new Date().toLocaleDateString("en-IN")}`, 14, 28);
-
-  doc.setFontSize(11);
-  doc.setTextColor(40, 40, 40);
-  const summaryY = 38;
-  doc.text(`Total Income: ${formatCurrency(summary.totalIncome)}`, 14, summaryY);
-  doc.text(`Total Expenditure: ${formatCurrency(summary.totalExpenditure)}`, 90, summaryY);
-  doc.text(`Net Total: ${formatCurrency(summary.netTotal)}`, 170, summaryY);
-
-  const tableData = entries.map((e) => [
-    formatDate(e.date),
-    e.name,
-    e.type === "income" ? "Income" : "Expenditure",
-    e.paymentMode === "bank" ? "by bank" : "by cash",
-    e.description || "-",
-    `${e.type === "income" ? "+" : "-"}${formatCurrency(e.amount)}`,
-  ]);
-
-  autoTable(doc, {
-    startY: 45,
-    head: [["Date", "Name", "Type", "Mode", "Description", "Amount"]],
-    body: tableData,
-    styles: { fontSize: 9, cellPadding: 3 },
-    headStyles: {
-      fillColor: [146, 64, 14],
-      textColor: [255, 255, 255],
-      fontStyle: "bold",
-    },
-    columnStyles: {
-      5: { halign: "right" },
-    },
-    alternateRowStyles: { fillColor: [250, 250, 248] },
-  });
-
-  return doc;
+  return `<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<title>${escapeHtml(eventName)} - Transaction Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Noto Sans Malayalam','Malayalam Sangam MN',system-ui,sans-serif; color:#282828; padding:40px; font-size:14px; }
+  @media print { body { padding:20px; } .no-print { display:none !important; } }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { background:#92400e; color:#fff; padding:10px 12px; text-align:left; font-weight:600; }
+  th:last-child { text-align:right; }
+</style>
+</head>
+<body>
+<h1 style="font-size:22px;margin-bottom:6px;">${escapeHtml(eventName)} - Transaction Report</h1>
+<p style="color:#787878;font-size:12px;margin-bottom:20px;">Generated: ${new Date().toLocaleDateString("en-IN")}</p>
+<div style="margin-bottom:24px;display:flex;gap:32px;font-size:14px;">
+  <div>Total Income: <strong>${formatCurrency(summary.totalIncome)}</strong></div>
+  <div>Total Expenditure: <strong>${formatCurrency(summary.totalExpenditure)}</strong></div>
+  <div>Net Total: <strong>${formatCurrency(summary.netTotal)}</strong></div>
+</div>
+<table>
+  <thead><tr><th>Date</th><th>Name</th><th>Type</th><th>Mode</th><th>Description</th><th>Amount</th></tr></thead>
+  <tbody>${rows}</tbody>
+</table>
+${autoPrint ? "<script>window.onload=function(){window.print();}</script>" : ""}
+</body>
+</html>`;
 }
 
 export function DownloadPdfButton({ entries, summary, eventName }: DownloadPdfButtonProps) {
   function handlePreview() {
-    const doc = buildPdf(entries, summary, eventName);
-    const blobUrl = doc.output("bloburl");
-    window.open(blobUrl, "_blank");
+    const html = buildReportHtml(entries, summary, eventName, false);
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
   }
 
   function handleDownload() {
-    const doc = buildPdf(entries, summary, eventName);
-    doc.save(`${eventName.toLowerCase().replace(/\s+/g, "-")}-report.pdf`);
+    const html = buildReportHtml(entries, summary, eventName, true);
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
   }
 
   return (
