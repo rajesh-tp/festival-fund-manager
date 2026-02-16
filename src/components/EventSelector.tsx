@@ -30,7 +30,7 @@ export function EventSelector({ events }: EventSelectorProps) {
     <select
       value={currentEventId}
       onChange={handleChange}
-      className="rounded-lg border-0 bg-amber-900 px-3 py-1.5 text-sm font-medium text-amber-100 outline-none transition-colors hover:bg-amber-700 focus:ring-2 focus:ring-amber-400/30"
+      className="rounded-lg border-0 bg-nav-active px-3 py-1.5 text-sm font-medium text-nav-text outline-none transition-colors hover:bg-nav-hover focus:ring-2 focus:ring-nav-ring"
     >
       <option value="">Select Event</option>
       {events.map((event) => (

@@ -20,12 +20,12 @@ export default async function EntryPage({ searchParams }: EntryPageProps) {
   if (!eventId || isNaN(eventId)) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <p className="text-stone-500">
+        <p className="text-text-muted">
           Please select an event to add transactions.
         </p>
         <Link
           href="/events"
-          className="mt-4 inline-block rounded-lg bg-amber-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
+          className="mt-4 inline-block rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
         >
           Go to Events
         </Link>
@@ -51,7 +51,7 @@ export default async function EntryPage({ searchParams }: EntryPageProps) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="mb-8 text-2xl font-bold text-stone-800">
+      <h1 className="mb-8 text-2xl font-bold text-text-primary">
         {editData ? "Edit Transaction" : "Add Transaction"}
       </h1>
 

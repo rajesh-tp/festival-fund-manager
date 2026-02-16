@@ -44,7 +44,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
     <form
       ref={formRef}
       action={formAction}
-      className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm"
+      className="rounded-xl border border-border bg-surface p-6 shadow-sm"
     >
       {editData && <input type="hidden" name="id" value={editData.id} />}
       <input type="hidden" name="eventId" value={eventId} />
@@ -54,7 +54,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
         <div>
           <label
             htmlFor="date"
-            className="mb-1.5 block text-sm font-medium text-stone-700"
+            className="mb-1.5 block text-sm font-medium text-text-secondary"
           >
             Date <span className="text-red-500">*</span>
           </label>
@@ -64,7 +64,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
             name="date"
             key={`date-${editData?.id ?? "new"}`}
             defaultValue={editData?.date ?? getTodayISO()}
-            className="w-full rounded-lg border border-stone-300 px-4 py-2.5 text-stone-900 transition-colors focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong px-4 py-2.5 text-text-heading transition-colors focus:border-focus-border focus:ring-2 focus:ring-focus-ring focus:outline-none"
           />
           {state.errors?.date && (
             <p className="mt-1 text-sm text-red-600">{state.errors.date[0]}</p>
@@ -75,7 +75,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
         <div>
           <label
             htmlFor="name"
-            className="mb-1.5 block text-sm font-medium text-stone-700"
+            className="mb-1.5 block text-sm font-medium text-text-secondary"
           >
             Name of Person / Shop <span className="text-red-500">*</span>
           </label>
@@ -86,7 +86,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
             key={`name-${editData?.id ?? "new"}`}
             defaultValue={editData?.name ?? ""}
             placeholder="e.g., Rajesh Kumar"
-            className="w-full rounded-lg border border-stone-300 px-4 py-2.5 text-stone-900 placeholder:text-stone-400 transition-colors focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong px-4 py-2.5 text-text-heading placeholder:text-text-faint transition-colors focus:border-focus-border focus:ring-2 focus:ring-focus-ring focus:outline-none"
           />
           {state.errors?.name && (
             <p className="mt-1 text-sm text-red-600">{state.errors.name[0]}</p>
@@ -97,7 +97,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
         <div>
           <label
             htmlFor="amount"
-            className="mb-1.5 block text-sm font-medium text-stone-700"
+            className="mb-1.5 block text-sm font-medium text-text-secondary"
           >
             Amount (Rs.) <span className="text-red-500">*</span>
           </label>
@@ -110,7 +110,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
             key={`amount-${editData?.id ?? "new"}`}
             defaultValue={editData?.amount ?? ""}
             placeholder="e.g., 5000"
-            className="w-full rounded-lg border border-stone-300 px-4 py-2.5 text-stone-900 placeholder:text-stone-400 transition-colors focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+            className="w-full rounded-lg border border-border-strong px-4 py-2.5 text-text-heading placeholder:text-text-faint transition-colors focus:border-focus-border focus:ring-2 focus:ring-focus-ring focus:outline-none"
           />
           {state.errors?.amount && (
             <p className="mt-1 text-sm text-red-600">
@@ -121,7 +121,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
 
         {/* Type */}
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-stone-700">
+          <label className="mb-1.5 block text-sm font-medium text-text-secondary">
             Type <span className="text-red-500">*</span>
           </label>
           <div className="flex gap-3">
@@ -134,7 +134,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
                 defaultChecked={editData?.type === "income"}
                 className="peer hidden"
               />
-              <div className="cursor-pointer rounded-lg border-2 border-stone-200 px-4 py-2.5 text-center text-sm font-medium text-stone-600 transition-all peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:text-green-700">
+              <div className="cursor-pointer rounded-lg border-2 border-border px-4 py-2.5 text-center text-sm font-medium text-text-secondary transition-all peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:text-green-700">
                 Income
               </div>
             </label>
@@ -147,7 +147,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
                 defaultChecked={editData?.type === "expenditure"}
                 className="peer hidden"
               />
-              <div className="cursor-pointer rounded-lg border-2 border-stone-200 px-4 py-2.5 text-center text-sm font-medium text-stone-600 transition-all peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700">
+              <div className="cursor-pointer rounded-lg border-2 border-border px-4 py-2.5 text-center text-sm font-medium text-text-secondary transition-all peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700">
                 Expenditure
               </div>
             </label>
@@ -159,7 +159,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
 
         {/* Payment Mode */}
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-stone-700">
+          <label className="mb-1.5 block text-sm font-medium text-text-secondary">
             Payment Mode <span className="text-red-500">*</span>
           </label>
           <div className="flex gap-3">
@@ -172,7 +172,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
                 defaultChecked={editData?.paymentMode !== "bank"}
                 className="peer hidden"
               />
-              <div className="cursor-pointer rounded-lg border-2 border-stone-200 px-4 py-2.5 text-center text-sm font-medium text-stone-600 transition-all peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-700">
+              <div className="cursor-pointer rounded-lg border-2 border-border px-4 py-2.5 text-center text-sm font-medium text-text-secondary transition-all peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-700">
                 Cash
               </div>
             </label>
@@ -185,7 +185,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
                 defaultChecked={editData?.paymentMode === "bank"}
                 className="peer hidden"
               />
-              <div className="cursor-pointer rounded-lg border-2 border-stone-200 px-4 py-2.5 text-center text-sm font-medium text-stone-600 transition-all peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700">
+              <div className="cursor-pointer rounded-lg border-2 border-border px-4 py-2.5 text-center text-sm font-medium text-text-secondary transition-all peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700">
                 Bank (GPay, etc.)
               </div>
             </label>
@@ -199,10 +199,10 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
         <div>
           <label
             htmlFor="description"
-            className="mb-1.5 block text-sm font-medium text-stone-700"
+            className="mb-1.5 block text-sm font-medium text-text-secondary"
           >
             Description / Remarks{" "}
-            <span className="text-stone-400">(Optional)</span>
+            <span className="text-text-faint">(Optional)</span>
           </label>
           <textarea
             id="description"
@@ -211,7 +211,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
             key={`desc-${editData?.id ?? "new"}`}
             defaultValue={editData?.description ?? ""}
             placeholder="e.g., Donation for pooja arrangements"
-            className="w-full resize-none rounded-lg border border-stone-300 px-4 py-2.5 text-stone-900 placeholder:text-stone-400 transition-colors focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+            className="w-full resize-none rounded-lg border border-border-strong px-4 py-2.5 text-text-heading placeholder:text-text-faint transition-colors focus:border-focus-border focus:ring-2 focus:ring-focus-ring focus:outline-none"
           />
           {state.errors?.description && (
             <p className="mt-1 text-sm text-red-600">
@@ -225,7 +225,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
           <button
             type="submit"
             disabled={isPending}
-            className="flex-1 rounded-lg bg-amber-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-800 focus:ring-2 focus:ring-amber-500/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex-1 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover focus:ring-2 focus:ring-focus-ring focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isPending ? (
               <span className="inline-flex items-center justify-center gap-2">
@@ -259,7 +259,7 @@ export function TransactionForm({ editData, eventId }: TransactionFormProps) {
           {isEditing && (
             <Link
               href={`/entry?event=${eventId}`}
-              className="flex items-center rounded-lg border border-stone-300 px-6 py-3 text-sm font-semibold text-stone-600 transition-colors hover:bg-stone-50"
+              className="flex items-center rounded-lg border border-border-strong px-6 py-3 text-sm font-semibold text-text-secondary transition-colors hover:bg-surface-alt"
             >
               Cancel
             </Link>

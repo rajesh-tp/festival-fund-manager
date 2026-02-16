@@ -23,7 +23,8 @@ describe("ReportFilters", () => {
 
   it("renders sort dropdown", () => {
     render(<ReportFilters />);
-    expect(screen.getByRole("combobox")).toBeInTheDocument();
+    const selects = screen.getAllByRole("combobox");
+    expect(selects).toHaveLength(2);
   });
 
   it("calls router.push when filter clicked", () => {
@@ -42,8 +43,9 @@ describe("ReportFilters", () => {
 
   it("updates sort params on dropdown change", () => {
     render(<ReportFilters />);
-    const select = screen.getByRole("combobox");
-    fireEvent.change(select, { target: { value: "amount-desc" } });
+    const selects = screen.getAllByRole("combobox");
+    const sortSelect = selects[1];
+    fireEvent.change(sortSelect, { target: { value: "amount-desc" } });
     expect(mockPush).toHaveBeenCalledWith(expect.stringContaining("sortBy=amount"));
   });
 });

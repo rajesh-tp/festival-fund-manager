@@ -31,8 +31,8 @@ export function EventList({ events, isSuperadmin }: EventListProps) {
 
   if (events.length === 0) {
     return (
-      <div className="rounded-xl border border-stone-200 bg-white p-8 text-center shadow-sm">
-        <p className="text-stone-500">
+      <div className="rounded-xl border border-border bg-surface p-8 text-center shadow-sm">
+        <p className="text-text-muted">
           No events yet. Create your first event above.
         </p>
       </div>
@@ -41,17 +41,17 @@ export function EventList({ events, isSuperadmin }: EventListProps) {
 
   return (
     <div className="space-y-3">
-      <h2 className="text-lg font-semibold text-stone-800">All Events</h2>
+      <h2 className="text-lg font-semibold text-text-primary">All Events</h2>
 
       {events.map((event) => (
         <div
           key={event.id}
-          className="flex items-center justify-between rounded-xl border border-stone-200 bg-white p-5 shadow-sm"
+          className="flex items-center justify-between rounded-xl border border-border bg-surface p-5 shadow-sm"
         >
           <div className="min-w-0 flex-1">
-            <h3 className="font-semibold text-stone-800">{event.name}</h3>
+            <h3 className="font-semibold text-text-primary">{event.name}</h3>
             {event.description && (
-              <p className="mt-1 text-sm text-stone-500">
+              <p className="mt-1 text-sm text-text-muted">
                 {event.description}
               </p>
             )}
@@ -60,7 +60,7 @@ export function EventList({ events, isSuperadmin }: EventListProps) {
           <div className="ml-4 flex items-center gap-2">
             <Link
               href={`/?event=${event.id}`}
-              className="rounded-lg bg-amber-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-800"
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
             >
               Select
             </Link>

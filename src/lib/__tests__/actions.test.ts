@@ -314,6 +314,7 @@ describe("addTransaction", () => {
       name: "Decorations",
       amount: "1500",
       type: "expenditure",
+      paymentMode: "cash",
       description: "Lights and garlands",
       eventId: "1",
     });
@@ -350,6 +351,7 @@ describe("addTransaction", () => {
       name: "Donation",
       amount: "5000",
       type: "income",
+      paymentMode: "cash",
       description: "",
       eventId: "1",
     });
@@ -373,6 +375,7 @@ describe("updateTransaction", () => {
       name: "Flowers",
       amount: "500",
       type: "expenditure",
+      paymentMode: "cash",
       description: "",
       eventId: "1",
     });
@@ -392,6 +395,7 @@ describe("updateTransaction", () => {
       name: "Sound System",
       amount: "8000",
       type: "expenditure",
+      paymentMode: "bank",
       description: "DJ setup",
       eventId: "1",
     });
@@ -417,6 +421,7 @@ describe("updateTransaction", () => {
       name: "Flowers",
       amount: "500",
       type: "expenditure",
+      paymentMode: "cash",
       description: "",
       eventId: "1",
     });

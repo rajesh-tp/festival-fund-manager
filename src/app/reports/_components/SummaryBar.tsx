@@ -12,7 +12,7 @@ export function SummaryBar({
   netTotal,
 }: SummaryBarProps) {
   return (
-    <div className="grid gap-3 rounded-xl border border-stone-200 bg-white p-4 shadow-sm sm:grid-cols-3">
+    <div className="grid gap-3 rounded-xl border border-border bg-surface p-4 shadow-sm sm:grid-cols-3">
       <div className="flex items-center gap-3 rounded-lg bg-green-50 px-4 py-3">
         <div className="rounded-full bg-green-100 p-1.5">
           <svg

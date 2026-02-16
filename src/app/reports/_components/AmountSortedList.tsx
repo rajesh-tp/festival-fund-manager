@@ -7,39 +7,39 @@ type AmountSortedListProps = {
 
 export function AmountSortedList({ entries }: AmountSortedListProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
       {/* Desktop Table */}
       <div className="hidden md:block">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-stone-200 bg-stone-50">
-              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-stone-400 uppercase">
+            <tr className="border-b border-border bg-surface-alt">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-text-faint uppercase">
                 Date
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-stone-400 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-text-faint uppercase">
                 Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-stone-400 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-text-faint uppercase">
                 Type
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-stone-400 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-text-faint uppercase">
                 Mode
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-stone-400 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-text-faint uppercase">
                 Description
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium tracking-wider text-stone-400 uppercase">
+              <th className="px-6 py-3 text-right text-xs font-medium tracking-wider text-text-faint uppercase">
                 Amount
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-stone-50">
+          <tbody className="divide-y divide-border-light">
             {entries.map((entry) => (
-              <tr key={entry.id} className="hover:bg-stone-50/50">
-                <td className="whitespace-nowrap px-6 py-3 text-sm text-stone-600">
+              <tr key={entry.id} className="hover:bg-surface-alt">
+                <td className="whitespace-nowrap px-6 py-3 text-sm text-text-secondary">
                   {formatDate(entry.date)}
                 </td>
-                <td className="px-6 py-3 text-sm font-medium text-stone-800">
+                <td className="px-6 py-3 text-sm font-medium text-text-primary">
                   {entry.name}
                 </td>
                 <td className="px-6 py-3">
@@ -64,7 +64,7 @@ export function AmountSortedList({ entries }: AmountSortedListProps) {
                     {entry.paymentMode === "bank" ? "by bank" : "by cash"}
                   </span>
                 </td>
-                <td className="px-6 py-3 text-sm text-stone-500">
+                <td className="px-6 py-3 text-sm text-text-muted">
                   {entry.description || "-"}
                 </td>
                 <td
@@ -82,14 +82,14 @@ export function AmountSortedList({ entries }: AmountSortedListProps) {
       </div>
 
       {/* Mobile Cards */}
-      <div className="divide-y divide-stone-100 md:hidden">
+      <div className="divide-y divide-border-light md:hidden">
         {entries.map((entry) => (
           <div key={entry.id} className="flex items-center justify-between px-4 py-3">
             <div>
-              <p className="text-sm font-medium text-stone-800">{entry.name}</p>
-              <p className="mt-0.5 text-xs text-stone-400">{formatDate(entry.date)}</p>
+              <p className="text-sm font-medium text-text-primary">{entry.name}</p>
+              <p className="mt-0.5 text-xs text-text-faint">{formatDate(entry.date)}</p>
               {entry.description && (
-                <p className="mt-0.5 text-xs text-stone-400">{entry.description}</p>
+                <p className="mt-0.5 text-xs text-text-faint">{entry.description}</p>
               )}
             </div>
             <div className="text-right">

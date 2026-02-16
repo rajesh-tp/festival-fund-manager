@@ -44,10 +44,10 @@ export function SuperadminPanel({ users, eventId }: SuperadminPanelProps) {
 
       <div className="space-y-4">
         {/* Delete All Transactions */}
-        <div className="flex items-center justify-between rounded-lg bg-white p-4 shadow-sm">
+        <div className="flex items-center justify-between rounded-lg bg-surface p-4 shadow-sm">
           <div>
-            <p className="font-medium text-stone-800">Delete All Transactions</p>
-            <p className="text-sm text-stone-500">
+            <p className="font-medium text-text-primary">Delete All Transactions</p>
+            <p className="text-sm text-text-muted">
               Permanently remove all transaction entries
             </p>
           </div>
@@ -64,30 +64,30 @@ export function SuperadminPanel({ users, eventId }: SuperadminPanelProps) {
         </div>
 
         {/* Reset User Passwords */}
-        <div className="rounded-lg bg-white p-4 shadow-sm">
-          <p className="mb-3 font-medium text-stone-800">Reset User Password</p>
-          <p className="mb-3 text-sm text-stone-500">
+        <div className="rounded-lg bg-surface p-4 shadow-sm">
+          <p className="mb-3 font-medium text-text-primary">Reset User Password</p>
+          <p className="mb-3 text-sm text-text-muted">
             Reset password to the user&apos;s username
           </p>
           <div className="space-y-2">
             {users.map((user) => (
               <div
                 key={user.username}
-                className="flex items-center justify-between rounded-lg border border-stone-100 px-4 py-2"
+                className="flex items-center justify-between rounded-lg border border-border-light px-4 py-2"
               >
-                <span className="text-sm font-medium text-stone-700">
+                <span className="text-sm font-medium text-text-secondary">
                   {user.username}
                 </span>
                 <button
                   onClick={() => handleResetPassword(user.username)}
-                  className="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-amber-700"
+                  className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary-hover"
                 >
                   Reset Password
                 </button>
               </div>
             ))}
             {users.length === 0 && (
-              <p className="text-sm text-stone-400">No other users found.</p>
+              <p className="text-sm text-text-faint">No other users found.</p>
             )}
           </div>
         </div>

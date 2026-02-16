@@ -19,12 +19,12 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
   if (!eventId || isNaN(eventId)) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <p className="text-stone-500">
+        <p className="text-text-muted">
           Please select an event to view reports.
         </p>
         <Link
           href="/events"
-          className="mt-4 inline-block rounded-lg bg-amber-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
+          className="mt-4 inline-block rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
         >
           Go to Events
         </Link>
@@ -37,10 +37,10 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
   if (!event) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <p className="text-stone-500">Event not found.</p>
+        <p className="text-text-muted">Event not found.</p>
         <Link
           href="/events"
-          className="mt-4 inline-block rounded-lg bg-amber-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
+          className="mt-4 inline-block rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
         >
           Go to Events
         </Link>
@@ -73,10 +73,10 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-stone-800">
+          <h1 className="text-2xl font-bold text-text-primary">
             Transaction Reports
           </h1>
-          <p className="mt-1 text-sm text-stone-500">{event.name}</p>
+          <p className="mt-1 text-sm text-text-muted">{event.name}</p>
         </div>
         {!isEmpty && (
           <DownloadPdfButton
@@ -103,9 +103,9 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
       <ReportFilters />
 
       {isEmpty ? (
-        <div className="mt-8 rounded-xl border border-stone-200 bg-white p-12 text-center shadow-sm">
+        <div className="mt-8 rounded-xl border border-border bg-surface p-12 text-center shadow-sm">
           <svg
-            className="mx-auto h-12 w-12 text-stone-300"
+            className="mx-auto h-12 w-12 text-text-faint"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -117,7 +117,7 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <p className="mt-4 text-stone-500">
+          <p className="mt-4 text-text-muted">
             No transactions found.{" "}
             {typeFilter
               ? `No ${typeFilter} entries recorded yet.`

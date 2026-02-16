@@ -20,7 +20,7 @@ export function LoginForm() {
       <div>
         <label
           htmlFor="username"
-          className="mb-1.5 block text-sm font-medium text-stone-700"
+          className="mb-1.5 block text-sm font-medium text-text-secondary"
         >
           Username
         </label>
@@ -29,14 +29,14 @@ export function LoginForm() {
           id="username"
           name="username"
           required
-          className="w-full rounded-lg border border-stone-300 px-4 py-2.5 text-stone-900 transition-colors focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+          className="w-full rounded-lg border border-border-strong px-4 py-2.5 text-text-heading transition-colors focus:border-focus-border focus:ring-2 focus:ring-focus-ring focus:outline-none"
         />
       </div>
 
       <div>
         <label
           htmlFor="password"
-          className="mb-1.5 block text-sm font-medium text-stone-700"
+          className="mb-1.5 block text-sm font-medium text-text-secondary"
         >
           Password
         </label>
@@ -45,7 +45,7 @@ export function LoginForm() {
           id="password"
           name="password"
           required
-          className="w-full rounded-lg border border-stone-300 px-4 py-2.5 text-stone-900 transition-colors focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+          className="w-full rounded-lg border border-border-strong px-4 py-2.5 text-text-heading transition-colors focus:border-focus-border focus:ring-2 focus:ring-focus-ring focus:outline-none"
         />
       </div>
 
@@ -56,7 +56,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-lg bg-amber-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-800 focus:ring-2 focus:ring-amber-500/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover focus:ring-2 focus:ring-focus-ring focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isPending ? (
           <span className="inline-flex items-center gap-2">

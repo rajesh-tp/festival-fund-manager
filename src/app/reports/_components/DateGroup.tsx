@@ -8,10 +8,10 @@ type DateGroupProps = {
 
 export function DateGroup({ date, data }: DateGroupProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
       {/* Date Header */}
-      <div className="border-b border-stone-100 bg-stone-50 px-4 py-3 sm:px-6">
-        <h3 className="text-sm font-semibold text-stone-700">
+      <div className="border-b border-border-light bg-surface-alt px-4 py-3 sm:px-6">
+        <h3 className="text-sm font-semibold text-text-secondary">
           {formatDate(date)}
         </h3>
       </div>
@@ -20,28 +20,28 @@ export function DateGroup({ date, data }: DateGroupProps) {
       <div className="hidden md:block">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-stone-100">
-              <th className="px-6 py-2.5 text-left text-xs font-medium tracking-wider text-stone-400 uppercase">
+            <tr className="border-b border-border-light">
+              <th className="px-6 py-2.5 text-left text-xs font-medium tracking-wider text-text-faint uppercase">
                 Name
               </th>
-              <th className="px-6 py-2.5 text-left text-xs font-medium tracking-wider text-stone-400 uppercase">
+              <th className="px-6 py-2.5 text-left text-xs font-medium tracking-wider text-text-faint uppercase">
                 Type
               </th>
-              <th className="px-6 py-2.5 text-left text-xs font-medium tracking-wider text-stone-400 uppercase">
+              <th className="px-6 py-2.5 text-left text-xs font-medium tracking-wider text-text-faint uppercase">
                 Mode
               </th>
-              <th className="px-6 py-2.5 text-left text-xs font-medium tracking-wider text-stone-400 uppercase">
+              <th className="px-6 py-2.5 text-left text-xs font-medium tracking-wider text-text-faint uppercase">
                 Description
               </th>
-              <th className="px-6 py-2.5 text-right text-xs font-medium tracking-wider text-stone-400 uppercase">
+              <th className="px-6 py-2.5 text-right text-xs font-medium tracking-wider text-text-faint uppercase">
                 Amount
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-stone-50">
+          <tbody className="divide-y divide-border-light">
             {data.entries.map((entry) => (
-              <tr key={entry.id} className="hover:bg-stone-50/50">
-                <td className="px-6 py-3 text-sm font-medium text-stone-800">
+              <tr key={entry.id} className="hover:bg-surface-alt">
+                <td className="px-6 py-3 text-sm font-medium text-text-primary">
                   {entry.name}
                 </td>
                 <td className="px-6 py-3">
@@ -66,7 +66,7 @@ export function DateGroup({ date, data }: DateGroupProps) {
                     {entry.paymentMode === "bank" ? "by bank" : "by cash"}
                   </span>
                 </td>
-                <td className="px-6 py-3 text-sm text-stone-500">
+                <td className="px-6 py-3 text-sm text-text-muted">
                   {entry.description || "-"}
                 </td>
                 <td
@@ -84,13 +84,13 @@ export function DateGroup({ date, data }: DateGroupProps) {
       </div>
 
       {/* Mobile Cards */}
-      <div className="divide-y divide-stone-100 md:hidden">
+      <div className="divide-y divide-border-light md:hidden">
         {data.entries.map((entry) => (
           <div key={entry.id} className="flex items-center justify-between px-4 py-3">
             <div>
-              <p className="text-sm font-medium text-stone-800">{entry.name}</p>
+              <p className="text-sm font-medium text-text-primary">{entry.name}</p>
               {entry.description && (
-                <p className="mt-0.5 text-xs text-stone-400">
+                <p className="mt-0.5 text-xs text-text-faint">
                   {entry.description}
                 </p>
               )}
@@ -130,10 +130,10 @@ export function DateGroup({ date, data }: DateGroupProps) {
       </div>
 
       {/* Date Subtotals */}
-      <div className="flex flex-wrap gap-4 border-t border-stone-200 bg-stone-50 px-4 py-3 sm:px-6">
+      <div className="flex flex-wrap gap-4 border-t border-border bg-surface-alt px-4 py-3 sm:px-6">
         {data.incomeTotal > 0 && (
           <p className="text-sm">
-            <span className="text-stone-500">Income: </span>
+            <span className="text-text-muted">Income: </span>
             <span className="font-semibold text-green-600">
               +{formatCurrency(data.incomeTotal)}
             </span>
@@ -141,14 +141,14 @@ export function DateGroup({ date, data }: DateGroupProps) {
         )}
         {data.expenditureTotal > 0 && (
           <p className="text-sm">
-            <span className="text-stone-500">Expenditure: </span>
+            <span className="text-text-muted">Expenditure: </span>
             <span className="font-semibold text-red-600">
               -{formatCurrency(data.expenditureTotal)}
             </span>
           </p>
         )}
         <p className="text-sm">
-          <span className="text-stone-500">Net: </span>
+          <span className="text-text-muted">Net: </span>
           <span
             className={`font-semibold ${
               data.incomeTotal - data.expenditureTotal >= 0

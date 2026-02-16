@@ -12,11 +12,11 @@ export default async function LoginPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-16">
-      <div className="rounded-xl border border-stone-200 bg-white p-8 shadow-sm">
+      <div className="rounded-xl border border-border bg-surface p-8 shadow-sm">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent-light-bg">
             <svg
-              className="h-6 w-6 text-amber-700"
+              className="h-6 w-6 text-accent-text"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -29,8 +29,8 @@ export default async function LoginPage() {
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-stone-800">Admin Login</h1>
-          <p className="mt-1 text-sm text-stone-500">
+          <h1 className="text-2xl font-bold text-text-primary">Admin Login</h1>
+          <p className="mt-1 text-sm text-text-muted">
             Sign in to manage transactions
           </p>
         </div>

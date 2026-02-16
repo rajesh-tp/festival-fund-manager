@@ -44,12 +44,20 @@ function escapeHtml(str: string): string {
     .replace(/'/g, "&#039;");
 }
 
+function getThemeHeaderColor(): string {
+  if (typeof document === "undefined") return "#92400e";
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue("--theme-pdf-header")
+    .trim() || "#92400e";
+}
+
 function buildReportHtml(
   entries: PdfEntry[],
   summary: DownloadPdfButtonProps["summary"],
   eventName: string,
   autoPrint: boolean,
 ): string {
+  const headerColor = getThemeHeaderColor();
   const rows = entries
     .map((e, i) => {
       const bg = i % 2 === 1 ? "background-color:#fafaf8;" : "";
@@ -76,7 +84,7 @@ function buildReportHtml(
   body { font-family:'Noto Sans Malayalam','Malayalam Sangam MN',system-ui,sans-serif; color:#282828; padding:40px; font-size:14px; }
   @media print { body { padding:20px; } .no-print { display:none !important; } }
   table { width:100%; border-collapse:collapse; font-size:13px; }
-  th { background:#92400e; color:#fff; padding:10px 12px; text-align:left; font-weight:600; }
+  th { background:${headerColor}; color:#fff; padding:10px 12px; text-align:left; font-weight:600; }
   th:last-child { text-align:right; }
 </style>
 </head>
@@ -116,7 +124,7 @@ export function DownloadPdfButton({ entries, summary, eventName }: DownloadPdfBu
     <div className="flex gap-2">
       <button
         onClick={handlePreview}
-        className="inline-flex items-center gap-2 rounded-lg border border-amber-700 px-4 py-2 text-sm font-medium text-amber-700 transition-colors hover:bg-amber-50"
+        className="inline-flex items-center gap-2 rounded-lg border border-outline-border px-4 py-2 text-sm font-medium text-accent-text transition-colors hover:bg-outline-hover-bg"
       >
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -126,7 +134,7 @@ export function DownloadPdfButton({ entries, summary, eventName }: DownloadPdfBu
       </button>
       <button
         onClick={handleDownload}
-        className="inline-flex items-center gap-2 rounded-lg bg-amber-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-amber-800"
+        className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-hover"
       >
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

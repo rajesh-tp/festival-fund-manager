@@ -37,8 +37,8 @@ export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
 
   if (entries.length === 0 && !currentSearch) {
     return (
-      <div className="mt-8 rounded-xl border border-stone-200 bg-white p-8 text-center shadow-sm">
-        <p className="text-stone-500">
+      <div className="mt-8 rounded-xl border border-border bg-surface p-8 text-center shadow-sm">
+        <p className="text-text-muted">
           No entries yet. Add your first transaction above.
         </p>
       </div>
@@ -48,7 +48,7 @@ export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
   return (
     <div className="mt-8">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold text-stone-800">
+        <h2 className="text-lg font-semibold text-text-primary">
           {currentSearch ? "Search Results" : "Recent Entries"}
         </h2>
         <div className="flex items-center gap-2">
@@ -58,11 +58,11 @@ export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
             onChange={(e) => setSearchInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             placeholder="Search by name..."
-            className="w-48 rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-700 shadow-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+            className="w-48 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-secondary shadow-sm focus:border-focus-border focus:ring-2 focus:ring-focus-ring focus:outline-none"
           />
           <button
             onClick={handleSearch}
-            className="rounded-lg bg-amber-700 px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-amber-800"
+            className="rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-hover"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -71,7 +71,7 @@ export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
           {currentSearch && (
             <button
               onClick={handleClear}
-              className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-600 shadow-sm transition-colors hover:bg-stone-50"
+              className="rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-text-secondary shadow-sm transition-colors hover:bg-surface-alt"
             >
               Clear
             </button>
@@ -80,8 +80,8 @@ export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
       </div>
 
       {entries.length === 0 && currentSearch && (
-        <div className="rounded-xl border border-stone-200 bg-white p-8 text-center shadow-sm">
-          <p className="text-stone-500">
+        <div className="rounded-xl border border-border bg-surface p-8 text-center shadow-sm">
+          <p className="text-text-muted">
             No entries found matching &ldquo;{currentSearch}&rdquo;.
           </p>
         </div>
@@ -89,37 +89,37 @@ export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
 
       {entries.length > 0 && <>
       {/* Desktop Table */}
-      <div className="hidden overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm md:block">
+      <div className="hidden overflow-hidden rounded-xl border border-border bg-surface shadow-sm md:block">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-stone-100 bg-stone-50">
-              <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-stone-500 uppercase">
+            <tr className="border-b border-border-light bg-surface-alt">
+              <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-text-muted uppercase">
                 Date
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-stone-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-text-muted uppercase">
                 Name
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-stone-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-text-muted uppercase">
                 Type
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-stone-500 uppercase">
+              <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-text-muted uppercase">
                 Mode
               </th>
-              <th className="px-4 py-3 text-right text-xs font-medium tracking-wider text-stone-500 uppercase">
+              <th className="px-4 py-3 text-right text-xs font-medium tracking-wider text-text-muted uppercase">
                 Amount
               </th>
-              <th className="px-4 py-3 text-center text-xs font-medium tracking-wider text-stone-500 uppercase">
+              <th className="px-4 py-3 text-center text-xs font-medium tracking-wider text-text-muted uppercase">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-stone-100">
+          <tbody className="divide-y divide-border-light">
             {entries.map((entry) => (
-              <tr key={entry.id} className="hover:bg-stone-50">
-                <td className="whitespace-nowrap px-4 py-3 text-sm text-stone-600">
+              <tr key={entry.id} className="hover:bg-surface-alt">
+                <td className="whitespace-nowrap px-4 py-3 text-sm text-text-secondary">
                   {formatDate(entry.date)}
                 </td>
-                <td className="px-4 py-3 text-sm font-medium text-stone-800">
+                <td className="px-4 py-3 text-sm font-medium text-text-primary">
                   {entry.name}
                 </td>
                 <td className="px-4 py-3">
@@ -158,7 +158,7 @@ export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
                   <div className="flex items-center justify-center gap-3">
                     <Link
                       href={`/entry?event=${eventId}&edit=${entry.id}`}
-                      className="text-amber-700 transition-colors hover:text-amber-900"
+                      className="text-accent-text transition-colors hover:text-accent-text-hover"
                       title="Edit transaction"
                     >
                       <svg
@@ -189,16 +189,16 @@ export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
         {entries.map((entry) => (
           <div
             key={entry.id}
-            className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm"
+            className="rounded-xl border border-border bg-surface p-4 shadow-sm"
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="font-medium text-stone-800">{entry.name}</p>
-                <p className="mt-0.5 text-xs text-stone-500">
+                <p className="font-medium text-text-primary">{entry.name}</p>
+                <p className="mt-0.5 text-xs text-text-muted">
                   {formatDate(entry.date)}
                 </p>
                 {entry.description && (
-                  <p className="mt-1 text-xs text-stone-400">
+                  <p className="mt-1 text-xs text-text-faint">
                     {entry.description}
                   </p>
                 )}
@@ -236,10 +236,10 @@ export function RecentEntries({ entries, eventId }: RecentEntriesProps) {
                 </div>
               </div>
             </div>
-            <div className="mt-3 flex items-center gap-4 border-t border-stone-100 pt-3">
+            <div className="mt-3 flex items-center gap-4 border-t border-border-light pt-3">
               <Link
                 href={`/entry?event=${eventId}&edit=${entry.id}`}
-                className="flex items-center gap-1.5 text-xs font-medium text-amber-700 transition-colors hover:text-amber-900"
+                className="flex items-center gap-1.5 text-xs font-medium text-accent-text transition-colors hover:text-accent-text-hover"
               >
                 <svg
                   className="h-3.5 w-3.5"

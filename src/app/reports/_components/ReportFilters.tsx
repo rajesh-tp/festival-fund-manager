@@ -69,8 +69,8 @@ export function ReportFilters() {
             onClick={() => handleFilterChange(filter.value)}
             className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
               currentFilter === filter.value
-                ? "bg-amber-700 text-white shadow-sm"
-                : "bg-white text-stone-600 border border-stone-200 hover:bg-stone-50"
+                ? "bg-primary text-white shadow-sm"
+                : "bg-surface text-text-secondary border border-border hover:bg-surface-alt"
             }`}
           >
             {filter.label}
@@ -82,7 +82,7 @@ export function ReportFilters() {
         <select
           value={currentPaymentMode}
           onChange={(e) => handlePaymentModeChange(e.target.value)}
-          className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-700 shadow-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-secondary shadow-sm focus:border-focus-border focus:ring-2 focus:ring-focus-ring focus:outline-none"
         >
           {paymentModeOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -93,7 +93,7 @@ export function ReportFilters() {
         <select
           value={currentSort}
           onChange={(e) => handleSortChange(e.target.value)}
-          className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-700 shadow-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:outline-none"
+          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text-secondary shadow-sm focus:border-focus-border focus:ring-2 focus:ring-focus-ring focus:outline-none"
         >
           {sortOptions.map((option) => (
             <option key={option.value} value={option.value}>

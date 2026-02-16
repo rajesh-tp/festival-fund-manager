@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { logout } from "@/lib/actions";
 import { EventSelector } from "@/components/EventSelector";
+import { ThemeSwitcher, ThemeSwitcherInline } from "@/components/ThemeSwitcher";
 import type { Event } from "@/db/schema";
 
 const navLinks = [
@@ -33,12 +34,12 @@ export function Navbar({ isAuthenticated, events }: NavbarProps) {
   }
 
   return (
-    <nav className="bg-amber-800 text-white shadow-lg">
+    <nav className="bg-nav text-white shadow-lg">
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex h-16 items-center justify-between">
-          <Link href="/events" className="flex items-center gap-2 text-lg font-bold">
+          <Link href="/events" className="flex items-center gap-2 text-lg font-bold text-nav-text">
             <svg
-              className="h-7 w-7 text-amber-300"
+              className="h-7 w-7 text-nav-icon"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -55,8 +56,8 @@ export function Navbar({ isAuthenticated, events }: NavbarProps) {
                 href={buildHref(link)}
                 className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   pathname === link.href
-                    ? "bg-amber-900 text-amber-100"
-                    : "text-amber-100 hover:bg-amber-700"
+                    ? "bg-nav-active text-nav-text"
+                    : "text-nav-text hover:bg-nav-hover"
                 }`}
               >
                 {link.label}
@@ -67,11 +68,13 @@ export function Navbar({ isAuthenticated, events }: NavbarProps) {
               <EventSelector events={events} />
             </div>
 
+            <ThemeSwitcher />
+
             {isAuthenticated ? (
               <form action={logout}>
                 <button
                   type="submit"
-                  className="ml-2 rounded-lg px-4 py-2 text-sm font-medium text-amber-100 transition-colors hover:bg-amber-700"
+                  className="ml-2 rounded-lg px-4 py-2 text-sm font-medium text-nav-text transition-colors hover:bg-nav-hover"
                 >
                   Logout
                 </button>
@@ -81,8 +84,8 @@ export function Navbar({ isAuthenticated, events }: NavbarProps) {
                 href="/login"
                 className={`ml-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   pathname === "/login"
-                    ? "bg-amber-900 text-amber-100"
-                    : "text-amber-100 hover:bg-amber-700"
+                    ? "bg-nav-active text-nav-text"
+                    : "text-nav-text hover:bg-nav-hover"
                 }`}
               >
                 Login
@@ -93,7 +96,7 @@ export function Navbar({ isAuthenticated, events }: NavbarProps) {
           {/* Mobile hamburger */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="rounded-lg p-2 text-amber-100 hover:bg-amber-700 md:hidden"
+            className="rounded-lg p-2 text-nav-text hover:bg-nav-hover md:hidden"
             aria-label="Toggle menu"
           >
             {isOpen ? (
@@ -111,7 +114,7 @@ export function Navbar({ isAuthenticated, events }: NavbarProps) {
         {/* Mobile menu */}
         <div
           className={`overflow-hidden transition-all duration-300 md:hidden ${
-            isOpen ? "max-h-80 pb-4" : "max-h-0"
+            isOpen ? "max-h-96 pb-4" : "max-h-0"
           }`}
         >
           <div className="mb-2 px-4 py-2">
@@ -125,19 +128,20 @@ export function Navbar({ isAuthenticated, events }: NavbarProps) {
               onClick={() => setIsOpen(false)}
               className={`block rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                 pathname === link.href
-                  ? "bg-amber-900 text-amber-100"
-                  : "text-amber-100 hover:bg-amber-700"
+                  ? "bg-nav-active text-nav-text"
+                  : "text-nav-text hover:bg-nav-hover"
               }`}
             >
               {link.label}
             </Link>
           ))}
+          <ThemeSwitcherInline />
           {isAuthenticated ? (
             <form action={logout}>
               <button
                 type="submit"
                 onClick={() => setIsOpen(false)}
-                className="block w-full rounded-lg px-4 py-2 text-left text-sm font-medium text-amber-100 transition-colors hover:bg-amber-700"
+                className="block w-full rounded-lg px-4 py-2 text-left text-sm font-medium text-nav-text transition-colors hover:bg-nav-hover"
               >
                 Logout
               </button>
@@ -148,8 +152,8 @@ export function Navbar({ isAuthenticated, events }: NavbarProps) {
               onClick={() => setIsOpen(false)}
               className={`block rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                 pathname === "/login"
-                  ? "bg-amber-900 text-amber-100"
-                  : "text-amber-100 hover:bg-amber-700"
+                  ? "bg-nav-active text-nav-text"
+                  : "text-nav-text hover:bg-nav-hover"
               }`}
             >
               Login

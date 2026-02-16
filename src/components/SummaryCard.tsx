@@ -51,7 +51,7 @@ export function SummaryCard({ title, amount, variant }: SummaryCardProps) {
         <div className={`rounded-lg p-2 ${styles.icon}`}>
           {icons[variant]}
         </div>
-        <p className="text-sm font-medium text-stone-600">{title}</p>
+        <p className="text-sm font-medium text-text-secondary">{title}</p>
       </div>
       <p className={`mt-3 text-2xl font-bold ${styles.amount}`}>
         {formatCurrency(amount)}
