@@ -197,6 +197,23 @@ docker volume rm festival-data
 fly deploy
 ```
 
+### Database Backup
+
+Download the SQLite database from the Fly.io volume to your local machine:
+
+```bash
+fly sftp shell
+```
+
+Then inside the SFTP session:
+
+```
+get /data/festival.db ./festival-backup.db
+quit
+```
+
+The backup file will be saved to your current local directory.
+
 ## Project Structure
 
 ```
